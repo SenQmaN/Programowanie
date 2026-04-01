@@ -1,0 +1,19 @@
+<script>
+function decToHex(liczba) {
+    if (liczba === 0) {
+        console.log("0");
+        return;
+    }
+    let hex = "";
+    let znaki = "0123456789ABCDEF";
+    let temp = Math.abs(liczba);
+    while (temp > 0) {
+        let reszta = temp % 16;
+        hex = znaki[reszta] + hex;
+        temp = Math.floor(temp / 16);
+    }
+    if (liczba < 0) hex = "-" + hex;
+    console.log(hex);
+}
+decToHex(255);
+</script>
