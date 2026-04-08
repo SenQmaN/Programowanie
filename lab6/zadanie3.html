@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Zadanie 3</title>
+</head>
+<body>
+    <h1>Aktualny czas w Polsce:</h1>
+    <h2 id="czas">Ładowanie...</h2>
+
+    <script>
+        fetch('https://timeapi.io/api/Time/current/zone?timeZone=Europe/Warsaw')
+            .then(response => response.json())
+            .then(data => {
+                const czasH2 = document.getElementById('czas');
+                czasH2.textContent = `${data.dateTime}`;
+            })
+            .catch(error => {
+                console.error('Error fetching time:', error);
+                document.getElementById('czas').textContent = 'Błąd pobierania czasu.';
+            });
+    </script>
+</body>
+</html>
