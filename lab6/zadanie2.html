@@ -1,14 +1,13 @@
+<!DOCTYPE html>
 <html>
 
 <head>
+
     <meta charset="utf-8">
+    <title>Zadanie 2</title>
     <style>
         #reset {
             display: inline-block;
-        }
-
-        #stop {
-            display: none;
         }
     </style>
 </head>
@@ -16,14 +15,110 @@
 <body>
     <h1 id="czas">
         <span id="godziny">00</span>:<span id="minuty">00</span>:<span id="sekundy">00</span>
-    </h1>
-    <button id="start">START</button>
-    <button id="zapisz">ZAPISZ</button>
-    <button id="stop">STOP</button>
-    <button id="reset">RESET</button>
-    <p id="stan_stopera"></p>
-    <ul id="zapisane_czasy">
-    </ul>
+        /h1>
+        <button id="start">START</button>
+        <button id="zapisz">ZAPISZ</button>
+        <button id="stop">STOP</button>
+        <button id="reset">RESET</button>
+        <p id="stan_stopera"></p>
+        <ul id="zapisane_czasy">
+        </ul>
+
+
+        <script>
+            let timer = null;
+            let seconds = 0;
+
+            const godzinySpan = document.getElementById('godziny');
+            const minutySpan = document.getElementById('minuty');
+            const sekundySpan = document.getElementById('sekundy');
+            const stanStopera = document.getElementById('stan_stopera');
+            const zapisaneCzasy = document.getElementById('zapisane_czasy');
+
+            const btnStart = document.getElementById('start');
+            const btnZapisz = document.getElementById('zapisz');
+            const btnStop = document.getElementById('stop');
+            const btnReset = document.getElementById('reset');
+
+            let savedCount = 0;
+
+            function updateDisplay() {
+                const h = Math.floor(seconds / 3600);
+                const m = Math.floor((seconds % 3600) / 60);
+                const s = seconds % 60;
+
+                godzinySpan.textContent = h.toString().padStart(2, '0');
+                minutySpan.textContent = m.toString().padStart(2, '0');
+                sekundySpan.textContent = s.toString().padStart(2, '0');
+            }
+
+            function setButtonsState(state) {
+                if (state === 'default') {
+                    btnStart.style.display = 'inline-block';
+                    btnZapisz.style.display = 'inline-block';
+                    btnStop.style.display = 'none';
+                    btnReset.style.display = 'none'; // The instructions say visible should ONLY be Start and Zapisz
+                } else if (state === 'counting') {
+                    btnStart.style.display = 'none';
+                    btnZapisz.style.display = 'inline-block';
+                    btnStop.style.display = 'inline-block';
+                    btnReset.style.display = 'none';
+                } else if (state === 'paused') {
+                    btnStart.style.display = 'inline-block';
+                    btnZapisz.style.display = 'inline-block';
+                    btnStop.style.display = 'none';
+                    btnReset.style.display = 'inline-block';
+                }
+            }
+
+            // Initialize state
+            setButtonsState('default');
+            stanStopera.textContent = '';
+
+            btnStart.addEventListener('click', () => {
+                if (!timer) {
+                    timer = setInterval(() => {
+                        seconds++;
+                        updateDisplay();
+                    }, 1000);
+                    stanStopera.textContent = 'Odliczanie...';
+                    setButtonsState('counting');
+                }
+            });
+
+            btnStop.addEventListener('click', () => {
+                if (timer) {
+                    clearInterval(timer);
+                    timer = null;
+                    stanStopera.textContent = 'Wstrzymano';
+                    setButtonsState('paused');
+                }
+            });
+
+            btnZapisz.addEventListener('click', () => {
+                savedCount++;
+                const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
+                const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
+                const s = (seconds % 60).toString().padStart(2, '0');
+
+                const li = document.createElement('li');
+                li.textContent = `${savedCount}. ${h}:${m}:${s}`;
+                zapisaneCzasy.appendChild(li);
+            });
+
+            btnReset.addEventListener('click', () => {
+                if (timer) {
+                    clearInterval(timer);
+                    timer = null;
+                }
+                seconds = 0;
+                updateDisplay();
+                stanStopera.textContent = '';
+                zapisaneCzasy.innerHTML = '';
+                savedCount = 0;
+                setButtonsState('default');
+            });
+        </script>
 </body>
 
 </html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Zadanie 1</title>
+</head>
+<body>
+    <h1>Kalkulator dzielenia</h1>
+    
+    <label for="liczba1">Liczba 1:</label>
+    <input type="text" id="liczba1">
+    <br><br>
+    
+    <label for="liczba2">Liczba 2:</label>
+    <input type="text" id="liczba2">
+    <br><br>
+    
+    <button onclick="podziel()">Podziel</button>
+    
+    <p id="wynik"></p>
+
+    <script>
+        function podziel() {
+            let l1 = document.getElementById("liczba1").value;
+            let l2 = document.getElementById("liczba2").value;
+            let wynikDiv = document.getElementById("wynik");
+            
+            try {
+                l1 = l1.replace(',', '.');
+                l2 = l2.replace(',', '.');
+
+                if (l1 === "" || l2 === "") {
+                    throw "Pola nie mogą być puste!";
+                }
+
+                let num1 = parseFloat(l1);
+                let num2 = parseFloat(l2);
+
+                if (isNaN(num1) || isNaN(num2)) {
+                    throw "Wprowadzone dane nie są liczbami!";
+                }
+
+                if (num2 === 0) {
+                    throw "Nie można dzielić przez zero!";
+                }
+
+                let wynik = num1 / num2;
+                wynikDiv.innerHTML = "Wynik: " + wynik;
+                wynikDiv.style.color = "black";
+            } catch (error) {
+                wynikDiv.innerHTML = "Błąd: " + error;
+                wynikDiv.style.color = "red";
+            }
+        }
+    </script>
+</body>
+</html>

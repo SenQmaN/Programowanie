@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Zadanie 2 - Formularz</title>
+    <style>
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Rejestracja</h1>
+    <form id="rejForm">
+        <label>Nazwa użytkownika:</label><br>
+        <input type="text" id="login"><br><br>
+
+        <label>Adres e-mail:</label><br>
+        <input type="text" id="email"><br><br>
+
+        <label>Hasło:</label><br>
+        <input type="password" id="haslo1"><br><br>
+
+        <label>Powtórz hasło:</label><br>
+        <input type="password" id="haslo2"><br><br>
+
+        <label>Data urodzenia:</label><br>
+        <input type="date" id="dataUrodzenia"><br><br>
+
+        <label>Płeć:</label><br>
+        <select id="plec">
+            <option value="">Wybierz...</option>
+            <option value="Mężczyzna">Mężczyzna</option>
+            <option value="Kobieta">Kobieta</option>
+            <option value="Nie chcę podawać">Nie chcę podawać</option>
+        </select><br><br>
+
+        <label>Wersja:</label><br>
+        <input type="radio" name="wersja" value="Wersja darmowa"> Wersja darmowa<br>
+        <input type="radio" name="wersja" value="Wersja standardowa"> Wersja standardowa<br>
+        <input type="radio" name="wersja" value="Wersja premium"> Wersja premium<br><br>
+
+        <input type="checkbox" id="regulamin"> Akceptuję regulamin<br><br>
+
+        <button type="button" onclick="sprawdzFormularz()">Zarejestruj się</button>
+        <button type="reset">Wyczyść</button>
+    </form>
+
+    <div id="komunikat" style="margin-top:20px;"></div>
+
+    <script>
+        function sprawdzFormularz() {
+            let login = document.getElementById("login").value;
+            let email = document.getElementById("email").value;
+            let haslo1 = document.getElementById("haslo1").value;
+            let haslo2 = document.getElementById("haslo2").value;
+            let dataUrodzenia = document.getElementById("dataUrodzenia").value;
+            let plec = document.getElementById("plec").value;
+            let regulamin = document.getElementById("regulamin").checked;
+            
+            let wersjaObj = document.querySelector('input[name="wersja"]:checked');
+            let wersja = wersjaObj ? wersjaObj.value : "";
+            
+            let komunikat = document.getElementById("komunikat");
+            komunikat.innerHTML = "";
+
+            // 1. Czy wszystkie pola są wypełnione
+            if (login == "" || email == "" || haslo1 == "" || haslo2 == "" || dataUrodzenia == "" || plec == "" || wersja == "" || !regulamin) {
+                komunikat.innerHTML = "<span class='error'>Wypełnij wszystkie pola i zaznacz regulamin!</span>";
+                return;
+            }
+
+            // 2. Znaki alfanumeryczne w nazwie
+            let alfanumeryczne = /^[a-zA-Z0-9]+$/;
+            if (!alfanumeryczne.test(login)) {
+                komunikat.innerHTML = "<span class='error'>Nazwa użytkownika może zawierać tylko litery i cyfry!</span>";
+                return;
+            }
+
+            // 3. Sprawdzenie hasła
+            let maCyfre = /[0-9]/.test(haslo1);
+            if (haslo1.length < 8 || !maCyfre || haslo1 !== haslo2) {
+                komunikat.innerHTML = "<span class='error'>Hasło musi mieć co najmniej 8 znaków, przynajmniej jedną cyfrę, a oba hasła muszą być identyczne!</span>";
+                return;
+            }
+
+            // 4. Poprawny e-mail
+            let mailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!mailRegex.test(email)) {
+                komunikat.innerHTML = "<span class='error'>Błędny adres e-mail!</span>";
+                return;
+            }
+
+            // 5. Pełnoletność
+            let dataUr = new Date(dataUrodzenia);
+            let dzisiaj = new Date();
+            let wiek = dzisiaj.getFullYear() - dataUr.getFullYear();
+            let miesiac = dzisiaj.getMonth() - dataUr.getMonth();
+            if (miesiac < 0 || (miesiac === 0 && dzisiaj.getDate() < dataUr.getDate())) {
+                wiek--;
+            }
+            
+            if (wiek < 18) {
+                komunikat.innerHTML = "<span class='error'>Musisz mieć ukończone 18 lat!</span>";
+                return;
+            }
+
+            // Sukces
+            let d = dataUr.getDate().toString().padStart(2, '0');
+            let m = (dataUr.getMonth() + 1).toString().padStart(2, '0');
+            let y = dataUr.getFullYear();
+            let formatData = d + "." + m + "." + y;
+
+            // Ukrywanie hasła w gwiazdkach
+            let gwiazdkiHaslo = "";
+            for (let i = 0; i < haslo1.length; i++) {
+                gwiazdkiHaslo += "*";
+            }
+
+            komunikat.innerHTML = 
+                "Nazwa użytkownika: " + login + "<br>" +
+                "Hasło: " + gwiazdkiHaslo + "<br>" +
+                "Adres e-mail: " + email + "<br>" +
+                "Data urodzenia: " + formatData + "<br>" +
+                "Płeć: " + plec + "<br>" +
+                "Wybrana wersja: " + wersja;
+            
+            komunikat.style.color = "black";
+        }
+    </script>
+</body>
+</html>
