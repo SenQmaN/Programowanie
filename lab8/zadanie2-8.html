@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Zadania 2-8</title>
+</head>
+<body>
+    <h2>Zadania 2-8</h2>
+
+    <script>
+        //Zadanie 2 i 3
+        class ComplexNumber
+        {
+            constructor(re, im){this.real = re; this.imaginary = im;}
+            wypisz()
+            {
+                let znak;
+                let re = this.real; let im = this.imaginary;
+                if (this.imaginary < 0) {znak = ' - '; im = -im}
+                else {znak = ' + ';}
+                return re + znak + im + 'i';
+            }
+            module() {return Math.sqrt(this.real**2 + this.imaginary**2);}
+        }
+
+        function tablica_liczb(n)
+        {
+            let tablica = [];
+            for (let i =0; i<n; i++)
+            {
+                let re = Math.floor(Math.random() * 21 ) - 10;
+                let im = Math.floor(Math.random() * 21 ) - 10;
+                tablica.push(new ComplexNumber(re, im));
+            }
+            return tablica;
+        }
+
+        let tab = tablica_liczb(10);
+        console.log("Zadanie 3 (losowe liczby):");
+        tab.forEach(liczba => console.log(liczba.wypisz() + " (moduł: " + liczba.module().toFixed(2) + ")"));
+
+        // Zadanie 4
+        let zad4 = tab.filter(liczba => liczba.real > 0 && liczba.imaginary > 0);
+        console.log("Zadanie 4 (tylko dodatnie wartości):");
+        zad4.forEach(liczba => console.log(liczba.wypisz()));
+
+        // Zadanie 5
+        let zad5 = tab.map(liczba => new ComplexNumber(liczba.imaginary, liczba.real));
+        console.log("Zadanie 5 (zamienione części):");
+        zad5.forEach(liczba => console.log(liczba.wypisz()));
+
+        // Zadanie 6
+        let zad6 = tab.reduce((suma, liczba) => suma + liczba.module(), 0);
+        console.log("Zadanie 6 (suma modułów):");
+        console.log(zad6.toFixed(2));
+
+        // Zadanie 7
+        let zad7 = tab.reduce((min, liczba) => {
+            if (liczba.module() < min) {
+                return liczba.module();
+            } else {
+                return min;
+            }
+        }, tab[0].module());
+        console.log("Zadanie 7 (najmniejszy moduł):");
+        console.log(zad7.toFixed(2));
+
+        // Zadanie 8
+        let zad8 = tab.reduce((najwieksza, liczba) => {
+            if (liczba.module() > najwieksza.module()) {
+                return liczba;
+            } else {
+                return najwieksza;
+            }
+        }, tab[0]);
+        console.log("Zadanie 8 (liczba z największym modułem):");
+        console.log(zad8.wypisz() + " (moduł: " + zad8.module().toFixed(2) + ")");
+    </script>
+</body>
+</html>

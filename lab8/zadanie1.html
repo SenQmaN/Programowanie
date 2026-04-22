@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Zadanie 1</title>
+</head>
+<body>
+    <h2>Zadanie 1 - Formularz</h2>
+    <form id="formularz">
+        Imię: <input type="text" id="imie"><br>
+        Nazwisko: <input type="text" id="nazwisko"><br>
+        Wiek: <input type="number" id="wiek"><br>
+        <button type="button" onclick="wyslij()">Wyślij</button>
+    </form>
+
+    <script>
+        function wyslij() {
+            let imie = document.getElementById("imie").value;
+            let nazwisko = document.getElementById("nazwisko").value;
+            let wiek = document.getElementById("wiek").value;
+
+            let osoba = {
+                imie: imie,
+                nazwisko: nazwisko,
+                wiek: Number(wiek)
+            };
+
+            console.log("Cały obiekt:", osoba);
+       
+            console.log("Imię: " + osoba.imie);
+            console.log("Nazwisko: " + osoba.nazwisko);
+            console.log("Wiek: " + osoba.wiek);
+
+            let osobaJSON = JSON.stringify(osoba);
+            console.log("Format JSON:", osobaJSON);
+        }
+    </script>
+</body>
+</html>
