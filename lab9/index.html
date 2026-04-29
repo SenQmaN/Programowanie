@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gra w klikanie</title>
+</head>
+<body>
+    <h1 id="wynik">0</h1>
+    <br>
+    <button id="przycisk">Kliknij mnie!</button>
+    
+    <p id="m_klik_tekst">Moc kliknięcia = 1lvl</p>
+    <button id="m_klik_przycisk">Ulepsz moc kliknięcia (25)</button>
+    
+    <p id="p_klik_tekst">Pasywne kliknięcia = 0lvl</p>
+    <button id="p_klik_przycisk">Ulepsz pasywne kliknięcia (50)</button>
+
+    <script>
+        var wynik_label = document.getElementById("wynik");
+        var przycisk = document.getElementById("przycisk");
+        var m_klik_przycisk = document.getElementById("m_klik_przycisk");
+        var p_klik_przycisk = document.getElementById("p_klik_przycisk");
+
+        function aktualizujStrone()
+        {
+            let wynik = localStorage.getItem("wynik");
+            wynik_label.innerHTML = wynik;
+
+            let m_klik = parseInt(localStorage.getItem("m_klik")) || 1;
+            let p_klik = parseInt(localStorage.getItem("p_klik")) || 0;
+
+            document.getElementById("m_klik_tekst").innerHTML = "Moc kliknięcia = " + m_klik + "lvl";
+            let cena_m = Math.round(25 * (1.3**m_klik));
+            m_klik_przycisk.innerHTML = "Ulepsz moc kliknięcia (" + cena_m + ")";
+
+            document.getElementById("p_klik_tekst").innerHTML = "Pasywne kliknięcia = " + p_klik + "lvl";
+            let cena_p = Math.round(50 * (1.3**p_klik));
+            p_klik_przycisk.innerHTML = "Ulepsz pasywne kliknięcia (" + cena_p + ")";
+        }
+        function dodajPunkty(pkt)
+        {
+            let wynik = parseInt(localStorage.getItem("wynik"));
+            localStorage.setItem("wynik", wynik + pkt);
+            aktualizujStrone();
+        }
+        window.onload = _ =>
+        {
+            let wynik = localStorage.getItem("wynik");
+            let m_klik = localStorage.getItem("m_klik");
+            let p_klik = localStorage.getItem("p_klik");
+
+            if (!wynik) {
+                localStorage.setItem("wynik", 0);
+            }
+            if (!m_klik) {
+                localStorage.setItem("m_klik", 1);
+            }
+            if (!p_klik) {
+                localStorage.setItem("p_klik", 1);
+            }
+
+            aktualizujStrone();
+
+            const wykonajCoSekunde = _ =>
+            {
+                let p_klik = parseInt(localStorage.getItem("p_klik"));
+                dodajPunkty(p_klik - 1);
+            }
+            setInterval(wykonajCoSekunde, 1000);
+        }
+        przycisk.onclick = _ =>
+        {
+            let m_klik = parseInt(localStorage.getItem("m_klik"));
+            dodajPunkty(m_klik);
+        }
+        m_klik_przycisk.onclick = _ =>
+        {
+            let wynik = parseInt(localStorage.getItem("wynik"));
+            let m_klik = parseInt(localStorage.getItem("m_klik"));
+            let cena = Math.round(25 * (1.3**m_klik));
+            if (wynik >= cena)
+            {
+                dodajPunkty(-cena);
+                localStorage.setItem("m_klik", m_klik + 1);
+                aktualizujStrone();
+            }
+        }
+        p_klik_przycisk.onclick = _ =>
+        {
+            let wynik = parseInt(localStorage.getItem("wynik"));
+            let p_klik = parseInt(localStorage.getItem("p_klik"));
+            let cena = Math.round(50 * (1.3**p_klik));
+            if (wynik >= cena)
+            {
+                dodajPunkty(-cena);
+                localStorage.setItem("p_klik", p_klik + 1);
+                aktualizujStrone();
+            }
+        }
+    </script>
+</body>
+</html>
